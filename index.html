@@ -116,7 +116,8 @@
         function calculerPrix(distance, poids, quantite) {
             for (const categorie of prixAtlas) {
                 if (distance <= categorie.maxDistance) {
-                    return (categorie.rate * poids * quantite).toFixed(4);
+                    const rawPrice = categorie.rate * poids * quantite;
+                    return Math.ceil(rawPrice); // Arrondi à l'Atlas supérieur
                 }
             }
             return 'Prix non disponible';
@@ -129,6 +130,7 @@
             const destination = document.getElementById('destination').value;
             const type = document.getElementById('type').value;
             const quantite = parseFloat(document.getElementById('quantite').value) || 0;
+            const priorite = document.getElementById('priorite').value;
             const poids = weights[type] || 0;
 
             const distance = getDistance(depart, destination);
@@ -138,18 +140,29 @@
                 prix = calculerPrix(distance, poids, quantite);
             }
 
-            const texte = `:pencil: Status: ${status || 'Non spécifié'}\n
-:round_pushpin: Point de départ: ${depart || 'Non spécifié'}\n
-:airplane_arriving: Destination finale: ${destination || 'Non spécifié'}\n
-:straight_ruler: Distance: ${distance}\n
-:package: Type et quantité de cargaison: ${type || 'Non spécifié'}, ${quantite || 'Non spécifié'}\n
-:scroll: Poids unitaire de la ressource: ${poids}\n
-:rotating_light: Priorité: Non spécifié\n
-:money_with_wings: Prix: ${prix} $ATLAS\n`;
+            const texte = 
+`
+:pencil: Status: \`${status || 'Non spécifié'}\`
+
+:round_pushpin: Point de départ: \`${depart || 'Non spécifié'}\`
+
+:airplane_arriving: Destination finale: \`${destination || 'Non spécifié'}\`
+
+:straight_ruler: Distance: \`${distance}\`
+
+:package: Type et quantité de cargaison: \`${type || 'Non spécifié'}\`, \`${quantite || 'Non spécifié'}\`
+
+:scroll: Poids unitaire de la ressource: \`${poids}\`
+
+:money_with_wings: Prix: \`${prix}\` $ATLAS
+
+:rotating_light: Priorité: \`${priorite || 'Non spécifié'}\`
+`;
 
             const outputDiv = document.getElementById('output');
             outputDiv.textContent = texte;
         }
+
 
         // Une fois la page chargée, on insère les options dans la liste de type
         window.addEventListener('DOMContentLoaded', () => {
