@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire avec Menus Déroulants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('background.png') no-repeat center center/cover;
+        }
+        .form-container {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: white;
+            max-width: 400px;
+            width: 100%;
+        }
+        label {
+            margin-right: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        select, input {
+            padding: 5px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            color: black;
+        }
+    </style>
+    <script>
+        function afficherOptions(event) {
+            event.preventDefault();
+            const status = document.getElementById('status').value;
+            const depart = document.getElementById('depart').value;
+            const destination = document.getElementById('destination').value;
+            const type = document.getElementById('type').value;
+            const quantite = document.getElementById('quantite').value;
+            const poids = document.getElementById('poids').value;
+            const priorite = document.getElementById('priorite').value;
+
+            const texte = `:pencil: Status: \`${status || 'Non spécifié'}\`
+:round_pushpin: Point de départ: \`${depart || 'Non spécifié'}\`
+:airplane_arriving: Destination finale: \`${destination || 'Non spécifié'}\`
+:package: Type et quantité de cargaison: \`${type || 'Non spécifié'}, ${quantite || 'Non spécifiée'}\`
+:scroll: Poids de votre cargaison: \`${poids || 'Non spécifié'}\`
+:rotating_light: Priorité: \`${priorite || 'Non spécifiée'}\``;
+
+            const outputDiv = document.getElementById('output');
+            outputDiv.textContent = texte;
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Formulaire avec Menus Déroulants</h1>
+        <form onsubmit="afficherOptions(event)">
+            <!-- Catégorie: Status -->
+            <div class="form-group">
+                <label for="status">Status :</label>
+                <select id="status" name="status">
+                    <option value="">-- Sélectionnez un statut --</option>
+                    <option value="en_cours">En cours</option>
+                    <option value="termine">Terminé</option>
+                    <option value="non_commence">Non commencé</option>
+                    <option value="bloque">Bloqué</option>
+                </select>
+            </div>
+
+            <!-- Catégorie: Point de départ -->
+            <div class="form-group">
+                <label for="depart">Point de départ :</label>
+                <select id="depart" name="depart">
+                    <option value="">-- Sélectionnez un point de départ --</option>
+                    <option value="paris">Paris</option>
+                    <option value="lyon">Lyon</option>
+                    <option value="marseille">Marseille</option>
+                </select>
+            </div>
+
+            <!-- Catégorie: Destination finale -->
+            <div class="form-group">
+                <label for="destination">Destination finale :</label>
+                <select id="destination" name="destination">
+                    <option value="">-- Sélectionnez une destination finale --</option>
+                    <option value="londres">Londres</option>
+                    <option value="new_york">New York</option>
+                    <option value="tokyo">Tokyo</option>
+                </select>
+            </div>
+
+            <!-- Catégorie: Type et quantité -->
+            <div class="form-group">
+                <label for="type">Type :</label>
+                <select id="type" name="type">
+                    <option value="">-- Sélectionnez un type --</option>
+                    <option value="type_a">Type A</option>
+                    <option value="type_b">Type B</option>
+                    <option value="type_c">Type C</option>
+                </select>
+                <label for="quantite">Quantité :</label>
+                <input type="number" id="quantite" name="quantite" min="1" placeholder="Entrez la quantité">
+            </div>
+
+            <!-- Catégorie: Poids -->
+            <div class="form-group">
+                <label for="poids">Poids (kg) :</label>
+                <input type="number" id="poids" name="poids" step="0.01" placeholder="Entrez le poids">
+            </div>
+
+            <!-- Catégorie: Priorité -->
+            <div class="form-group">
+                <label for="priorite">Priorité :</label>
+                <select id="priorite" name="priorite">
+                    <option value="">-- Sélectionnez une priorité --</option>
+                    <option value="faible">Faible</option>
+                    <option value="moyenne">Moyenne</option>
+                    <option value="elevee">Élevée</option>
+                    <option value="urgente">Urgente</option>
+                </select>
+            </div>
+
+            <button type="submit">Soumettre</button>
+        </form>
+
+        <div id="output" class="output"></div>
+    </div>
+</body>
+</html>
