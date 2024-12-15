@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eclypse Freight calculator</title>
+    <title>Eclypse Freight Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -63,7 +63,19 @@
         }
     </style>
     <script>
-const distances = {
+        const weights = {
+            Aerogel: 1, Ammunition: 1, Arco: 1, Biomass: 1, Carbon: 1, Copper: 1,
+            "Copper Ore": 1, "Copper Wire": 1, Diamond: 1, Food: 1, Framework: 1, Fuel: 1,
+            "Golden Ticket 2624": 1, Hydrogen: 1, Iron: 1, "Iron Ore": 1, Lumanite: 1,
+            Magnet: 1, Nitrogen: 1, Polymer: 1, Rochinol: 1, Silica: 1, Steel: 1,
+            "Survey Data Unit": 1, Titanium: 1, "Titanium Ore": 1, Toolkit: 1,
+            Electronics: 2, Graphene: 2, Hydrocarbon: 2, "Power Source": 2,
+            Electromagnet: 4, "Energy Substrate": 4, "Crystal Lattice": 5,
+            "Strange Emitter": 5, "Super Conductor": 5, "Field Stabilizer": 6,
+            "Particle Accelerator": 6, "Radiation Absorber": 6
+        };
+
+        const distances = {
     'MUD-1': {'MUD-2': 5.39, 'MUD-3': 10.2, 'MUD-4': 5.39, 'MUD-5': 10.2, 'MRZ-1': 16.16, 'MRZ-2': 14.42, 'MRZ-3': 26.08, 'MRZ-4': 17, 'MRZ-5': 16.12, 'MRZ-6': 25.5, 'MRZ-7': 25.24, 'MRZ-8': 37.8, 'MRZ-9': 26.93, 'MRZ-10': 35.47, 'MRZ-11': 36.89, 'MRZ-12': 42.15},
     'MUD-2': {'MUD-1': 5.39, 'MUD-3': 10.63, 'MUD-4': 10.77, 'MUD-5': 11, 'MRZ-1': 17.03, 'MRZ-2': 20.17, 'MRZ-3': 25.63, 'MRZ-4': 14.14, 'MRZ-5': 11, 'MRZ-6': 20.12, 'MRZ-7': 21.02, 'MRZ-8': 32.72, 'MRZ-9': 24.08, 'MRZ-10': 30.41, 'MRZ-11': 32.65, 'MRZ-12': 38.47},
     'MUD-3': {'MUD-1': 10.2, 'MUD-2': 10.63, 'MUD-4': 12.37, 'MUD-5': 20.4, 'MRZ-1': 26.25, 'MRZ-2': 10.2, 'MRZ-3': 35.78, 'MRZ-4': 24.76, 'MRZ-5': 21.38, 'MRZ-6': 25.02, 'MRZ-7': 19.42, 'MRZ-8': 47.17, 'MRZ-9': 30.46, 'MRZ-10': 31.78, 'MRZ-11': 30.41, 'MRZ-12': 48.55},
@@ -83,20 +95,16 @@ const distances = {
     'MRZ-12': {'MUD-1': 42.15, 'MUD-2': 38.47, 'MUD-3': 48.55, 'MUD-4': 46.17, 'MUD-5': 37.48, 'MRZ-1': 33.02, 'MRZ-2': 41.77, 'MRZ-3': 25.71, 'MRZ-4': 25.3, 'MRZ-5': 29.21, 'MRZ-6': 31.38, 'MRZ-7': 44.65, 'MRZ-8': 21.26, 'MRZ-9': 16.12, 'MRZ-10': 40.8, 'MRZ-11': 50.7}
 };
 
-
         const prixAtlas = [
             { maxDistance: 10, rate: 0.0003 },
             { maxDistance: 20, rate: 0.0006 },
             { maxDistance: 30, rate: 0.0009 },
-            { maxDistance: 50, rate: 0.0012}
+            { maxDistance: 50, rate: 0.0012 }
         ];
 
         function getDistance(depart, destination) {
             if (depart in distances && destination in distances[depart]) {
                 return distances[depart][destination];
-            }
-            if (destination in distances && depart in distances[destination]) {
-                return distances[destination][depart];
             }
             return 'Distance non disponible';
         }
@@ -117,8 +125,7 @@ const distances = {
             const destination = document.getElementById('destination').value;
             const type = document.getElementById('type').value;
             const quantite = parseFloat(document.getElementById('quantite').value) || 0;
-            const poids = parseFloat(document.getElementById('poids').value) || 0;
-            const priorite = document.getElementById('priorite').value;
+            const poids = weights[type] || 0;
 
             const distance = getDistance(depart, destination);
             let prix = 'Prix non disponible';
@@ -132,20 +139,26 @@ const distances = {
 :airplane_arriving: Destination finale: ${destination || 'Non spécifié'}\n
 :straight_ruler: Distance: ${distance}\n
 :package: Type et quantité de cargaison: ${type || 'Non spécifié'}, ${quantite || 'Non spécifié'}\n
-:scroll: Poids de votre cargaison: ${poids || 'Non spécifié'}\n
-:rotating_light: Priorité: ${priorite || 'Non spécifié'}\n
+:scroll: Poids unitaire de la ressource: ${poids}\n
+:rotating_light: Priorité: Non spécifié\n
 :money_with_wings: Prix: ${prix} $ATLAS\n`;
 
             const outputDiv = document.getElementById('output');
             outputDiv.textContent = texte;
         }
+
+        // Une fois la page chargée, on insère les options dans la liste de type
+        window.addEventListener('DOMContentLoaded', () => {
+            const typeSelect = document.getElementById('type');
+            const optionsHtml = Object.keys(weights).map(key => `<option value="${key}">${key}</option>`).join('');
+            typeSelect.innerHTML += optionsHtml;
+        });
     </script>
 </head>
 <body>
     <div class="form-container">
-        <h1>Eclypse Freight calculator</h1>
+        <h1>Eclypse Freight Calculator</h1>
         <form onsubmit="afficherOptions(event)">
-            <!-- Catégorie: Status -->
             <div class="form-group">
                 <label for="status">Status :</label>
                 <select id="status" name="status">
@@ -155,8 +168,6 @@ const distances = {
                     <option value="✅ Finit">✅ Finit</option>
                 </select>
             </div>
-
-            <!-- Catégorie: Point de départ -->
             <div class="form-group">
                 <label for="depart">Point de départ :</label>
                 <select id="depart" name="depart">
@@ -180,8 +191,6 @@ const distances = {
                     <option value="MRZ-12">MRZ-12</option>
                 </select>
             </div>
-
-            <!-- Catégorie: Destination finale -->
             <div class="form-group">
                 <label for="destination">Destination finale :</label>
                 <select id="destination" name="destination">
@@ -205,53 +214,23 @@ const distances = {
                     <option value="MRZ-12">MRZ-12</option>
                 </select>
             </div>
-
-            <!-- Catégorie: Type et quantité -->
             <div class="form-group">
                 <label for="type">Type :</label>
                 <select id="type" name="type">
-                    <option value="">-- Sélectionnez un type --</option>
-                    <option value="Carbon">Carbon</option>
-                    <option value="Lumanite">Lumanite</option>
-                    <option value="Iron ore">Iron ore</option>
-                    <option value="Copper Ore">Copper Ore</option>
-                    <option value="Diamond">Diamond</option>
-                    <option value="Titanium Ore">Titanium Ore</option>
-                    <option value="Particle accelerator">Particle accelerator</option>
-                    <option value="Radiation absorber">Radiation absorber</option>
-                    <option value="Super conductor">Super conductor</option>
-                    <option value="Strange emitter">Strange emitter</option>
-                    <option value="Graphene">Graphene</option>
-                    <option value="Framework">Framework</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Fuel">Fuel</option>
-                    <option value="Ammunition">Ammunition</option>
-                    <option value="Food">Food</option>
-                    <option value="Hydrogen">Hydrogen</option>
-                    <option value="Biomass">Biomass</option>
+                    <!-- Les options seront insérées dynamiquement ici -->
                 </select>
                 <label for="quantite">Quantité :</label>
                 <input type="number" id="quantite" name="quantite" min="1" placeholder="Entrez la quantité">
             </div>
-
-            <!-- Catégorie: Poids -->
-            <div class="form-group">
-                <label for="poids">Poids:</label>
-                <input type="number" id="poids" name="poids" step="0.01" placeholder="Entrez le poids">
-            </div>
-
-            <!-- Catégorie: Priorité -->
             <div class="form-group">
                 <label for="priorite">Priorité :</label>
                 <select id="priorite" name="priorite">
-                    <option value="">-- Sélectionnez une priorité --</option>
                     <option value="🔴 URGENT">🔴 URGENT</option>
                     <option value="🟠 Important">🟠 Important</option>
                     <option value="🟡 A le temps">🟡 A le temps</option>
                     <option value="🟢 Pas important">🟢 Pas important</option>
                 </select>
             </div>
-
             <button type="submit">Soumettre</button>
         </form>
         <div id="output" class="output"></div>
